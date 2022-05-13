@@ -133,8 +133,8 @@ def listing():
         return jsonify(listing_schema.dump(listingFilter))
 
     elif request.method == 'GET':
-        allListings = Listing.query.all()
-        return jsonify(listings_schema.dump(allListings))
+        listingFilter = Listing.query.filter_by(user2_phone=None).all()
+        return jsonify(listings_schema.dump(listingFilter))
 
 
 @app.route('/userListing', methods=['POST', 'GET', 'DELETE'])
@@ -301,8 +301,8 @@ def exchangeRate():
     return jsonify({
         "usd_to_lbp": THREE_DAY_SELL_AVG,
         "lbp_to_usd": THREE_DAY_BUY_AVG,
-        "7day_usd_to_lbp": SEVEN_DAY_SELL_AVG,
-        "7day_lbp_to_usd": SEVEN_DAY_BUY_AVG,
+        "sev_day_usd_to_lbp": SEVEN_DAY_SELL_AVG,
+        "sev_day_lbp_to_usd": SEVEN_DAY_BUY_AVG,
         "all_time_usd_volume": ALL_TIME_USD_VOLUME,
         "all_time_lbp_volume": ALL_TIME_LBP_VOLUME,
         "last_day_usd_volume": LAST_DAY_USD_VOLUME,

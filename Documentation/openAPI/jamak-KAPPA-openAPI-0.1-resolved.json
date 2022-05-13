@@ -1,0 +1,742 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "KAPPA-openAPI",
+    "description": "430L project openAPI by Jason Makhoul",
+    "contact": {
+      "name": "Jason Makhoul",
+      "email": "jam25@mail.aub.edu"
+    },
+    "version": "0.1"
+  },
+  "externalDocs": {
+    "url": "https://github.com/jason-m25/kappa-backend"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Register"
+    },
+    {
+      "name": "Login"
+    },
+    {
+      "name": "Transactions"
+    },
+    {
+      "name": "Public Listings"
+    },
+    {
+      "name": "Private Listings"
+    },
+    {
+      "name": "Rates & Statistics"
+    },
+    {
+      "name": "Graph"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "description": "path to register with username and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\r\n    \"user_name\": \"jason\",\r\n    \"password\": \"hello\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "id and username returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"id\": 5, \n  \"user_name\": \"jason\"\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/authentication": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "description": "route to authenticate and login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/authentication_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"user_name\": \"jason\",\n    \"password\": \"hello\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "jwt token returned to be saved and used later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTI2NTExNzcsImlhdCI6MTY1MjMwNTU3Nywic3ViIjo1fQ.AhZpoWvyTVTioqy5vDOjr89TWcyh07vB7jwN4FI15hs\"\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/transaction": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "description": "route to get all of user's added transactions",
+        "responses": {
+          "200": {
+            "description": "list of transactions returned as json objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"added_datetime\": \"2022-05-12T00:55:35\", \n    \"id\": 15, \n    \"lbp_amount\": 75000.0, \n    \"usd_amount\": 3.0, \n    \"usd_to_lbp\": true, \n    \"user_id\": 5\n  }, \n  {\n    \"added_datetime\": \"2022-05-12T00:56:24\", \n    \"id\": 16, \n    \"lbp_amount\": 104000.0, \n    \"usd_amount\": 4.0, \n    \"usd_to_lbp\": false, \n    \"user_id\": 5\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "description": "route to post a transaction(user or anonymously)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/transaction_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\r\n    \"usd_amount\": \"3\",\r\n    \"lbp_amount\": \"25000\",\r\n    \"usd_to_lbp\": true\r\n}"
+                },
+                "1": {
+                  "value": "{\r\n    \"usd_amount\": \"2\",\r\n    \"lbp_amount\": \"48000\",\r\n    \"usd_to_lbp\": true\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "added transaction returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"added_datetime\": \"2022-05-12T00:48:51\", \n  \"id\": 13, \n  \"lbp_amount\": 25000.0, \n  \"usd_amount\": 3.0, \n  \"usd_to_lbp\": true, \n  \"user_id\": 5\n}\n"
+                  },
+                  "1": {
+                    "value": "{\n  \"added_datetime\": \"2022-05-12T00:49:54\", \n  \"id\": 14, \n  \"lbp_amount\": 48000.0, \n  \"usd_amount\": 2.0, \n  \"usd_to_lbp\": true, \n  \"user_id\": null\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/listing": {
+      "get": {
+        "tags": [
+          "Public Listings"
+        ],
+        "description": "route to obtain all listings available",
+        "responses": {
+          "200": {
+            "description": "json listings returned to be publically shown",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"ad_amount\": 100.0, \n    \"ad_type\": true, \n    \"added_datetime\": \"2022-05-12T01:09:09\", \n    \"ask_amount\": 2500000.0, \n    \"id\": 2, \n    \"user2_phone\": 70581385, \n    \"user_id\": 5\n  }, \n  {\n    \"ad_amount\": 100.0, \n    \"ad_type\": true, \n    \"added_datetime\": \"2022-05-12T01:09:33\", \n    \"ask_amount\": 2550000.0, \n    \"id\": 4, \n    \"user2_phone\": null, \n    \"user_id\": 5\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Public Listings"
+        ],
+        "description": "route to submit a phone number to a listing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/listing_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\r\n    \"id\": \"2\",\r\n    \"user2_phone\": \"70581385\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "listing returned with submitted phone number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_3"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"ad_amount\": 100.0, \n  \"ad_type\": true, \n  \"added_datetime\": \"2022-05-12T01:09:09\", \n  \"ask_amount\": 2500000.0, \n  \"id\": 2, \n  \"user2_phone\": 70581385, \n  \"user_id\": 5\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/userListing": {
+      "get": {
+        "tags": [
+          "Private Listings"
+        ],
+        "description": "path to get list of a user's listings",
+        "responses": {
+          "200": {
+            "description": "listings dumped as list of json objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"ad_amount\": 100.0, \n    \"ad_type\": true, \n    \"added_datetime\": \"2022-05-12T01:04:05\", \n    \"ask_amount\": 2500000.0, \n    \"id\": 1, \n    \"user2_phone\": null, \n    \"user_id\": 5\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Private Listings"
+        ],
+        "description": "path for user to add a listing",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userListing_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\r\n    \"ad_amount\": \"100\",\r\n    \"ad_type\": true,\r\n    \"ask_amount\": \"2500000\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "added listing returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_4"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"ad_amount\": 100.0, \n  \"ad_type\": true, \n  \"added_datetime\": \"2022-05-12T01:04:05\", \n  \"ask_amount\": 2500000.0, \n  \"id\": 1, \n  \"user2_phone\": null, \n  \"user_id\": 5\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Private Listings"
+        ],
+        "description": "path to delete a user's listing",
+        "responses": {
+          "200": {
+            "description": "listings returned having appropriately deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"ad_amount\": 100.0, \n    \"ad_type\": true, \n    \"added_datetime\": \"2022-05-12T01:09:09\", \n    \"ask_amount\": 2500000.0, \n    \"id\": 2, \n    \"user2_phone\": null, \n    \"user_id\": 5\n  }, \n  {\n    \"ad_amount\": 100.0, \n    \"ad_type\": true, \n    \"added_datetime\": \"2022-05-12T01:09:33\", \n    \"ask_amount\": 2550000.0, \n    \"id\": 4, \n    \"user2_phone\": null, \n    \"user_id\": 5\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/exchangeRate": {
+      "get": {
+        "tags": [
+          "Rates & Statistics"
+        ],
+        "description": "path to obtain rates and statistics",
+        "responses": {
+          "200": {
+            "description": "several variables returned relevant to rate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_5"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\n  \"7day_lbp_to_usd\": 24625.0, \n  \"7day_usd_to_lbp\": 24428.571428571428, \n  \"all_time_lbp_volume\": 687000.0, \n  \"all_time_usd_volume\": 28.0, \n  \"last_day_lbp_volume\": 466000.0, \n  \"last_day_usd_volume\": 19.0, \n  \"lbp_to_usd\": 24625.0, \n  \"lbp_to_usd_stdev\": 1302.4701806293192, \n  \"lbp_to_usd_trend\": true, \n  \"usd_to_lbp\": 24428.571428571428, \n  \"usd_to_lbp_stdev\": 786.7957924694432, \n  \"usd_to_lbp_trend\": true\n}\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/buyGraph": {
+      "get": {
+        "tags": [
+          "Graph"
+        ],
+        "description": "path to obtain buy rate's graph points",
+        "responses": {
+          "200": {
+            "description": "graph points returned as ordered json objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"added_date\": \"2022-05-08\", \n    \"rate\": 24000.0\n  }, \n  {\n    \"added_date\": \"2022-05-09\", \n    \"rate\": 26000.0\n  }, \n  {\n    \"added_date\": \"2022-05-11\", \n    \"rate\": 25000.0\n  }, \n  {\n    \"added_date\": \"2022-05-12\", \n    \"rate\": 26000.0\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    },
+    "/sellGraph": {
+      "get": {
+        "tags": [
+          "Graph"
+        ],
+        "description": "path to obtain sell rate's graph points",
+        "responses": {
+          "200": {
+            "description": "graph points returned as ordered json objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\n  {\n    \"added_date\": \"2022-05-08\", \n    \"rate\": 24000.0\n  }, \n  {\n    \"added_date\": \"2022-05-09\", \n    \"rate\": 25000.0\n  }, \n  {\n    \"added_date\": \"2022-05-11\", \n    \"rate\": 25000.0\n  }, \n  {\n    \"added_date\": \"2022-05-12\", \n    \"rate\": 24000.0\n  }\n]\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:5000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://127.0.0.1:5000"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "user_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_5": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "number"
+          },
+          "all_time_usd_volume": {
+            "type": "number"
+          },
+          "lbp_to_usd_stdev": {
+            "type": "number"
+          },
+          "all_time_lbp_volume": {
+            "type": "number"
+          },
+          "last_day_usd_volume": {
+            "type": "number"
+          },
+          "7day_usd_to_lbp": {
+            "type": "number"
+          },
+          "lbp_to_usd": {
+            "type": "number"
+          },
+          "usd_to_lbp_trend": {
+            "type": "boolean"
+          },
+          "last_day_lbp_volume": {
+            "type": "number"
+          },
+          "usd_to_lbp_stdev": {
+            "type": "number"
+          },
+          "7day_lbp_to_usd": {
+            "type": "number"
+          },
+          "lbp_to_usd_trend": {
+            "type": "boolean"
+          }
+        }
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "boolean"
+          },
+          "lbp_amount": {
+            "type": "number"
+          },
+          "user_id": {},
+          "id": {
+            "type": "integer"
+          },
+          "added_datetime": {
+            "type": "string"
+          },
+          "usd_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "listing_body": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user2_phone": {
+            "type": "string"
+          }
+        }
+      },
+      "authentication_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_3": {
+        "type": "object",
+        "properties": {
+          "ad_type": {
+            "type": "boolean"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "ask_amount": {
+            "type": "number"
+          },
+          "ad_amount": {
+            "type": "number"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "added_datetime": {
+            "type": "string"
+          },
+          "user2_phone": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_4": {
+        "type": "object",
+        "properties": {
+          "ad_type": {
+            "type": "boolean"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "ask_amount": {
+            "type": "number"
+          },
+          "ad_amount": {
+            "type": "number"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "added_datetime": {
+            "type": "string"
+          },
+          "user2_phone": {}
+        }
+      },
+      "transaction_body": {
+        "type": "object",
+        "properties": {
+          "usd_to_lbp": {
+            "type": "boolean"
+          },
+          "lbp_amount": {
+            "type": "string"
+          },
+          "usd_amount": {
+            "type": "string"
+          }
+        }
+      },
+      "userListing_body": {
+        "type": "object",
+        "properties": {
+          "ad_type": {
+            "type": "boolean"
+          },
+          "ask_amount": {
+            "type": "string"
+          },
+          "ad_amount": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
